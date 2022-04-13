@@ -52,10 +52,12 @@ def make_root(root, func, lnc):
     tk.Label(group_2, text="В", font=("Arial", 10)).grid(row=1, column=2)
     tk.Label(group_2, text="Шаг частоты", font=("Arial", 10)).grid(row=2, column=0)
     df_ent = tk.Entry(group_2, width=5)
+    df_ent.insert(tk.END, '0.25')
     df_ent.grid(row=2, column=1, stick='nsew')
     tk.Label(group_2, text="Гц", font=("Arial", 10)).grid(row=2, column=2)
     tk.Label(group_2, text="Максимальная частота", font=("Arial", 10)).grid(row=3, column=0)
     f_max_ent = tk.Entry(group_2, width=5)
+    f_max_ent.insert(tk.END, '128')
     f_max_ent.grid(row=3, column=1, stick='nsew')
     tk.Label(group_2, text="Гц", font=("Arial", 10)).grid(row=3, column=2)
 
@@ -73,11 +75,11 @@ def make_root(root, func, lnc):
     s_rx_ent.grid(row=0, column=3, stick='nsew')
     tk.Label(group_3, text=" Y ", font=("Arial", 10)).grid(row=1, column=0, stick='e')
     s_ly_ent = tk.Entry(group_3, width=5)
-    s_ly_ent.insert(tk.END, '-1')
+    s_ly_ent.insert(tk.END, '-5')
     s_ly_ent.grid(row=1, column=1, stick='nsew')
     tk.Label(group_3, text=" : ", font=("Arial", 10)).grid(row=1, column=2, stick='nsew')
     s_ry_ent = tk.Entry(group_3, width=5)
-    s_ry_ent.insert(tk.END, '1')
+    s_ry_ent.insert(tk.END, '5')
     s_ry_ent.grid(row=1, column=3, stick='nsew')
 
     tk.Label(group_3, text="Образ : Х ", font=("Arial", 10)).grid(row=2, column=0, stick='e')
@@ -108,6 +110,9 @@ def make_root(root, func, lnc):
     tk.Checkbutton(root, text="Показать линию среза", variable=chk_btn2, onvalue=1,
                    offvalue=0).place(x=40, y=400)
 
+    log = tk.Label(root, text='')
+    log.place(x=10, y=500)
+
     def btn_click():
         a = a_ent.get()
         b = b_ent.get()
@@ -137,7 +142,7 @@ def make_root(root, func, lnc):
             else:
                 int_data.append(float(n))
 
-        func(int_data, lnc, r_btn.get(), chk_btn.get(), chk_btn2.get())
+        func(int_data, lnc, r_btn.get(), chk_btn.get(), chk_btn2.get(), log)
 
     def enter(event):
         btn_click()
@@ -145,6 +150,8 @@ def make_root(root, func, lnc):
     btn = tk.Button(root, command=btn_click, text="Расчет", font=("Arial", 30))
     root.bind_all('<Return>', enter)
     btn.place(x=10, y=420, width=300)
+
+
 
 
 def make_window(window):

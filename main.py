@@ -3,7 +3,7 @@ from front import *
 
 
 # data = [a, b, f1, f2, cutoff, noise, df, f_max, s_lx, s_rx, s_ly, s_ry, i_lx, i_rx, i_ly, i_ry]
-def func(data, lnc_, r_btn_, chk_btn_, chk_btn2_):
+def func(data, lnc_, r_btn_, chk_btn_, chk_btn2_, log):
     f, t = signal(data[0], data[1], data[2], data[3], data[7], data[6], data[5])
     [lnc_[x].clear() for x in range(4)]
 
@@ -23,6 +23,7 @@ def func(data, lnc_, r_btn_, chk_btn_, chk_btn2_):
     lnc_[1].set_title('Image')
     lnc_[1].set_xlabel('Frequency, Hz')
     lnc_[1].set_ylabel('Amplitude/2')
+    lnc_[1].grid(color='grey', linewidth=0.5, linestyle='--')
     if chk_btn2_ == 1:
         lnc_[1].hlines(data[4], data[12], data[13], color='red', linestyle='--', linewidth=2)
     lnc_[5].draw()
@@ -33,6 +34,7 @@ def func(data, lnc_, r_btn_, chk_btn_, chk_btn2_):
     lnc_[2].set_title('Filtered image')
     lnc_[2].set_xlabel('Frequency, Hz')
     lnc_[2].set_ylabel('Amplitude/2')
+    lnc_[2].grid(color='grey', linewidth=0.5, linestyle='--')
     lnc_[6].draw()
 
     if chk_btn_ == 1:
@@ -50,7 +52,7 @@ def func(data, lnc_, r_btn_, chk_btn_, chk_btn2_):
     lnc_[3].set_ylim(data[10], data[11])
     lnc_[7].draw()
 
-    tk.Label(root, text='{:.3f} сек., {} точек'.format(time, t.shape[0])).place(x=10, y=500)
+    log['text'] = '{:.3f} сек., {} точек'.format(time, t.shape[0])
 
 
 window, root = init()
