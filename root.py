@@ -1,14 +1,14 @@
 from Errors import *
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import tkinter as tk
-import AppBack
+import app_back
 import matplotlib.pyplot as plt
 
 """
-data = [a_ent, b_ent, f1_ent, f2_ent, amp_cut_ent, noise_amp_ent, df_ent, f_max_ent, r_btn, chk_btn, chk_btn2]
-graph = [s_lx, s_rx, s_ly, s_ry, i_lx, i_rx, i_ly, i_ry]
-ax = [ax1, ax2, ax3, ax4]
-can = [canvas1, canvas2, canvas3, canvas4]
+data = [a_ent, b_ent, f1_ent, f2_ent, amp_cut_ent, noise_amp_ent, df_ent, f_max_ent, r_btn, chk_btn, chk_btn2] 11
+graph = [s_lx, s_rx, s_ly, s_ry, i_lx, i_rx, i_ly, i_ry] 8
+ax = [ax1, ax2, ax3, ax4] 4
+can = [canvas1, canvas2, canvas3, canvas4] 4
 """
 
 
@@ -17,7 +17,8 @@ class Root:
         plt.style.use('dark_background')
         self.root = tk.Tk()
         self.window = tk.Toplevel(self.root)
-        self.data, self.graph, self.ax, self.can, = [], [], [], []
+        self.ax, self.can = [], []
+        self.data, self.graph = [1. for i in range(11)], [1. for i in range(8)]
         self.graph_temp, self.data_temp = [tk.Entry() for x in range(8)], [tk.Entry() for x in range(11)]
         self.log = tk.Label()
 
@@ -138,24 +139,26 @@ class Root:
         data_ = [x.get() for x in self.data_temp]
         graph_data_ = [x.get() for x in self.graph_temp]
 
-        for n in data_:
-            if n == '':
+        for n in range(len(data_)):
+            if data_[n] == '':
                 field_error()
-                return
+                return False
             else:
-                self.data.append(float(n))
+                self.data[n] = float(data_[n])
 
-        for n in graph_data_:
-            if n == '':
+        for n in range(len(graph_data_)):
+            if graph_data_[n] == '':
                 field_error()
-                return
+                return False
             else:
-                self.graph.append(float(n))
+                self.graph[n] = float(graph_data_[n])
 
     def btn_clk(self):
-        self.check_entry()
+        if not self.check_entry():
+            self.graph = [0, 1, -5, 5, -16, 16, 0, 1]
+
         # PAYLOAD
-        bf = AppBack.AppBack(self.data)
+        bf = app_back.AppBack(self.data)
         f, t = bf.signal()
         a, b, c, freq, time = bf.ft(f)
 
@@ -230,12 +233,3 @@ class Root:
         self.ax[3].set_xlim(self.graph[0], self.graph[1])
         self.ax[3].set_ylim(self.graph[2], self.graph[3])
         self.can[3].draw()
-
-        self.graph.clear()
-        self.data.clear()
-
-
-app = Root()
-app.make_window()
-app.make_root()
-tk.mainloop()
