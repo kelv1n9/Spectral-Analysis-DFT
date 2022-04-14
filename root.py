@@ -4,6 +4,10 @@ import tkinter as tk
 import app_back
 import matplotlib.pyplot as plt
 
+from matplotlib.animation import FuncAnimation
+import numpy as np
+import DFT
+
 """
 data = [a_ent, b_ent, f1_ent, f2_ent, amp_cut_ent, noise_amp_ent, df_ent, f_max_ent, r_btn, chk_btn, chk_btn2] 11
 graph = [s_lx, s_rx, s_ly, s_ry, i_lx, i_rx, i_ly, i_ry] 8
@@ -21,6 +25,8 @@ class Root:
         self.data, self.graph = [1. for i in range(11)], [1. for i in range(8)]
         self.graph_temp, self.data_temp = [tk.Entry() for x in range(8)], [tk.Entry() for x in range(11)]
         self.log = tk.Label()
+
+        self.figures = [[plt.Figure(), plt.Figure()], [plt.Figure(), plt.Figure()]]
 
         self.root.bind_all('<Return>', (lambda event: self.btn_clk()))  # Забиндинные клавиши
 
@@ -135,7 +141,7 @@ class Root:
         btn = tk.Button(self.root, command=self.btn_clk, text="Расчет", font=("Arial", 30))
         btn.place(x=10, y=420, width=300)
 
-    def check_entry(self):
+    def get_entry(self):
         data_ = [x.get() for x in self.data_temp]
         graph_data_ = [x.get() for x in self.graph_temp]
 
@@ -154,17 +160,10 @@ class Root:
                 self.graph[n] = float(graph_data_[n])
 
     def btn_clk(self):
-        if not self.check_entry():
+        if not self.get_entry():
             self.graph = [0, 1, -5, 5, -16, 16, 0, 1]
 
-        # PAYLOAD
-        bf = app_back.AppBack(self.data)
-        f, t = bf.signal()
-        a, b, c, freq, time = bf.ft(f)
-
-        self.draw(a, b, c, f, t, freq)
-
-        self.log['text'] = '{:.3f} сек., {} точек'.format(time, t.shape[0])
+        self.draw()
 
     def make_window(self):
         titles = [['Source signal', 'Image'], ['Filtered image', 'Filtered signal']]
@@ -173,27 +172,39 @@ class Root:
                 frame = tk.Frame(self.window)
                 frame.grid(row=i, column=j, stick='wens')
 
-                fig = plt.Figure(figsize=(3, 3), dpi=100)
-                axes = fig.add_subplot(111)
+                self.figures[i][j] = plt.Figure(figsize=(3, 3), dpi=100)
+                axes = self.figures[i][j].add_subplot(111)
                 axes.set_title(titles[i][j])
 
-                canvas = FigureCanvasTkAgg(fig, master=frame)
+                canvas = FigureCanvasTkAgg(self.figures[i][j], master=frame)
                 canvas.draw()
                 canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
                 self.ax.append(axes)
                 self.can.append(canvas)
 
-    def draw(self, a, b, c, f, t, freq):
+    def draw(self):
+        bf = app_back.AppBack(self.data)
+        f, t = bf.signal()
+        a, b, c, freq, time = bf.ft(f)
+
         [self.ax[x].clear() for x in range(4)]
 
         # Source signal
-        self.ax[0].plot(t, f)
+        line, = self.ax[0].plot([], [])  # (t, f)
         self.ax[0].set_xlim(self.graph[0], self.graph[1])
         self.ax[0].set_ylim(self.graph[2], self.graph[3])
         self.ax[0].set_title('Source signal')
         self.ax[0].set_xlabel('Time, sec')
         self.ax[0].set_ylabel('Amplitude')
+
+        # Animation
+        def update(frame):
+            y, x = bf.signal(frame)
+            line.set_data(x, y)
+            return line,
+
+        anim = FuncAnimation(self.figures[0][0], update, frames=200, interval=20, blit=False)
         self.can[0].draw()
 
         # Image
@@ -233,3 +244,5 @@ class Root:
         self.ax[3].set_xlim(self.graph[0], self.graph[1])
         self.ax[3].set_ylim(self.graph[2], self.graph[3])
         self.can[3].draw()
+
+        self.log['text'] = '{:.3f} сек., {} точек'.format(time, t.shape[0])
