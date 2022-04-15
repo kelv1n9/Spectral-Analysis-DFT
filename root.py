@@ -1,12 +1,9 @@
 from Errors import *
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.animation import FuncAnimation
 import tkinter as tk
 import app_back
 import matplotlib.pyplot as plt
-
-from matplotlib.animation import FuncAnimation
-import numpy as np
-import DFT
 
 """
 data = [a_ent, b_ent, f1_ent, f2_ent, amp_cut_ent, noise_amp_ent, df_ent, f_max_ent, r_btn, chk_btn, chk_btn2] 11
@@ -185,7 +182,7 @@ class Root:
 
     def draw(self):
         bf = app_back.AppBack(self.data)
-        f, t = bf.signal()
+        t, f = bf.signal()
         a, b, c, freq, time = bf.ft(f)
 
         [self.ax[x].clear() for x in range(4)]
@@ -200,8 +197,7 @@ class Root:
 
         # Animation
         def update(frame):
-            y, x = bf.signal(frame)
-            line.set_data(x, y)
+            line.set_data(bf.signal(frame))
             return line,
 
         anim = FuncAnimation(self.figures[0][0], update, frames=200, interval=20, blit=False)

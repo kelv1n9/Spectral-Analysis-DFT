@@ -27,8 +27,8 @@ class AppBack:
         self.w = 2 * np.pi
 
     def signal(self, i=0):  # Исходный сигнал
-        return self.a * np.sin(self.f1 * self.w * (self.t - 0.01 * i)) + self.b * np.cos(
-            self.f2 * self.w * (self.t - 0.01 * i)) + self.noise(), self.t
+        return self.t, self.a * np.sin(self.f1 * self.w * (self.t - 0.01 * i)) + self.b * np.cos(
+            self.f2 * self.w * (self.t - 0.01 * i)) + self.noise()
 
     def noise(self):
         return self.noise_amp * 5 * np.random.randn(*np.shape(self.t))
