@@ -1,15 +1,6 @@
 import numpy as np
 
 
-def amp_filter(a, amp_slice):
-    amp = a.copy()
-    s = amp.shape[0]
-    for n in range(len(amp)):
-        if abs(amp[n]) / s < amp_slice:
-            amp[n] = 0
-    return amp
-
-
 def dft(x):
     s = x.shape[0]
     x_k = np.zeros(s, dtype='complex_')
