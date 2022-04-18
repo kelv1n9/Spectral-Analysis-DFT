@@ -9,14 +9,21 @@ def butter(freq, cutoff, n, type_):
         return 1 / np.sqrt(1 + np.power(cutoff / freq, 2 * n))
 
 
-f = np.linspace(0, 1000, 1000)
-amp = np.array([1 for i in range(1000)])
-amp1 = amp * butter(f, 100, 2, 'low')
+plt.style.use('seaborn')
 
-plt.style.use('dark_background')
+f = np.linspace(0, 1000000, 1000000)
+amp = np.array([1 for i in range(1000000)])
+
 plt.plot(f, amp)
-plt.plot(f, 20 * np.log10(amp1 / amp))
-plt.plot(100, 20 * np.log10(np.sqrt(1 / 2)), marker='o')
+
+for i in range(4):
+    amp1 = amp * butter(f, 1000, i, 'low')
+    plt.plot(f, 20 * np.log10(amp1 / amp))
+
+plt.xlabel('Частота (Гц)')
+plt.ylabel('Ослабление (дБ)')
+plt.legend()
 plt.xscale('log')
+plt.plot(1000, 20 * np.log10(np.sqrt(1 / 2)), marker='o')
 plt.grid(color='grey', linewidth=0.5, linestyle='--')
 plt.show()
