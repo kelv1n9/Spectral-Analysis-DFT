@@ -24,7 +24,7 @@ def ift(x):
 def fft(x):
     s = x.shape[0]
 
-    if s <= 32:
+    if s <= 8:
         return dft(x)
     else:
         left = fft(x[::2])
@@ -36,7 +36,7 @@ def fft(x):
 def ifft(x):
     s = x.shape[0]
 
-    if s <= 32:
+    if s <= 8:
         return ift(x)
     else:
         left = ifft(x[::2])
