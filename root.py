@@ -255,7 +255,7 @@ class Root:
         self.ax[1].set_ylabel('Amplitude/2')
         self.ax[1].grid(color='grey', linewidth=0.5, linestyle='--')
         if self.data[12] == 3:
-            self.ax[1].hlines(self.data[4], self.graph[4], self.graph[5], color='red', linestyle='--', linewidth=2)
+            self.ax[1].hlines(self.data[4]/2, self.graph[4], self.graph[5], color='red', linestyle='--', linewidth=2)
         self.can[1].draw()
 
         # Filtered Image

@@ -16,7 +16,7 @@ class AppBack:
         self.b = data[1]
         self.f1 = data[2]
         self.f2 = data[3]
-        self.amp_cutoff = data[4]
+        self.amp_cutoff = data[4]/2
         self.freq_cutoff = data[5]
         self.order = data[6]
         self.noise_amp = data[7]
@@ -36,7 +36,7 @@ class AppBack:
             self.f2 * self.w * (self.t - 0.01 * i)) + self.noise()
 
     def noise(self):
-        return self.noise_amp * 5 * np.random.randn(*np.shape(self.t))
+        return self.noise_amp * 10 * np.random.randn(*np.shape(self.t))
 
     def ft(self, f):
         if self.radiobutton == 1:
