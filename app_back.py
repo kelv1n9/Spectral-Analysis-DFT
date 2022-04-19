@@ -16,7 +16,7 @@ class AppBack:
         self.b = data[1]
         self.f1 = data[2]
         self.f2 = data[3]
-        self.amp_cutoff = data[4]/2
+        self.amp_cutoff = data[4] / 2
         self.freq_cutoff = data[5]
         self.order = data[6]
         self.noise_amp = data[7]
@@ -25,8 +25,8 @@ class AppBack:
         self.radiobutton = data[10]
         self.filter_btn = data[12]
 
-        self.n = int(2 * self.f_max / self.df)
-        period = self.n / (2 * self.f_max)
+        self.n = int(2 * self.f_max / self.df)  # N = (2*f_max / df)
+        period = self.n / (2 * self.f_max)  # T = (1 / (2*f_max))
 
         self.t = np.linspace(0, period, self.n)
         self.w = 2 * np.pi
